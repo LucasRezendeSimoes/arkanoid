@@ -4,18 +4,9 @@ using UnityEngine;
 
 public class BallControl : MonoBehaviour
 {
+    private bool mov = false;
     private Rigidbody2D rb2d;
     // Start is called before the first frame update
-    void GoBall(){   
-        if(Input.GetAxis("Horizontal") != 0f){                 
-            float rand = Random.Range(0, 2);
-            if(rand < 1){
-                rb2d.AddForce(new Vector2(20, 15));
-            } else {
-                rb2d.AddForce(new Vector2(-20, 15));
-            }
-        }
-    }
     
     void OnCollisionEnter2D(Collision2D coll){
         if (coll.gameObject.tag == "Brick"){
@@ -37,20 +28,24 @@ public class BallControl : MonoBehaviour
 
     // Reinicializa o jogo
     void RestartGame(){
-        ResetBall();
-        Invoke("GoBall", 1);
+        //ResetBall();
+        mov = false;
+        rb2d.velocity = Vector2.zero;
+        transform.position = new Vector2(0f, -3.7f);
     }
 
 
     void Start () {
         rb2d = GetComponent<Rigidbody2D>(); // Inicializa o objeto bola
-        Invoke("GoBall", 2);
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(!mov && Input.GetAxisRaw("Horizontal") != 0f) {
+            mov = true;
+            rb2d.AddForce(new Vector2(0, 15));
+        }
     }
 }

@@ -16,25 +16,22 @@ public class Raquete : MonoBehaviour
     void Update()
     {
     // Obtendo a entrada do usuário para movimentação
-    float moveX = Input.GetAxis("Horizontal"); // Movimento na horizontal (A/D ou setas)
-    float moveY = Input.GetAxis("Vertical"); // Movimento na vertical (W/S ou setas)
+    float moveX = Input.GetAxisRaw("Horizontal"); // Movimento na horizontal (A/D ou setas)
 
     // Calculando a direção do movimento
-    moveDirection = new Vector2(moveX, moveY).normalized; // Normalizando para evitar velocidade maior na diagonal
+    moveDirection = new Vector2(moveX, 0);
     }
 
     // FixedUpdate é chamado de forma mais consistente para física
-    void FixedUpdate(){
-    // Aplicando a movimentação no Rigidbody2D
-        if(rb2d.position.x > 5){
-            rb2d.MovePosition(new Vector2(5f,-4f));
-        }
-        else if(rb2d.position.x < -5){
-            rb2d.MovePosition(new Vector2(-5f,-4f));
-        }
-        else{
-            rb2d.MovePosition(rb2d.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
-        }
+    void FixedUpdate()
+    {
+        // Movimentação no Rigidbody2D
+        Vector2 newPos = rb2d.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
+
+        // Limitar a posição dentro dos valores especificados
+        newPos.x = Mathf.Clamp(newPos.x, -5, 5);  // Limitar o movimento na horizontal
+
+        rb2d.MovePosition(newPos);
     }
         
 }
